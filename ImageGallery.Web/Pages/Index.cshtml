@@ -1,0 +1,27 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="bottomMarginDefault">
+</div>
+
+<div class="container">
+    @foreach (var item in Model.Images)
+    {
+        <div class="pull-left col-md-4">
+            <div>
+                <img class="thumbnailImage" src="@("http://localhost:1601/images/" + item.FileName)" />
+            </div>
+            <div>
+                <div class="h5">@item.Title</div>
+                <div class="bottomMarginDefault">
+                    <a asp-page="EditImage" asp-route-id="@item.Id">Edit title</a> |
+                    @*<input type="submit" asp-page-handler="Delete" asp-route-id="@item.Id" value="Delete image" />*@
+                    <a asp-page-handler="Delete" asp-route-id="@item.Id">Delete image</a>
+                </div>
+            </div>
+        </div>
+    }
+</div> 
