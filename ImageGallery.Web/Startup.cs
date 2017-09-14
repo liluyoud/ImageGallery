@@ -9,32 +9,45 @@ using Microsoft.Extensions.DependencyInjection;
 using ImageGallery.Web.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Identity;
 
 namespace ImageGallery.Web
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication(options => {
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+            })
+            .AddCookie()
+            .AddOpenIdConnect(options => {
+                options.Authority = "https://localhost:44334/";
+                options.ClientId = "imagegalleryclient";
+                options.ClientSecret = "secret";
+                options.RequireHttpsMetadata = true;
+                //options.SaveTokens = true;
+                //options.GetClaimsFromUserInfoEndpoint = true;
+                //options.ResponseType = "code id_token";
+            });
+
             services.AddMvc();
 
-            // register an IHttpContextAccessor so we can access the current
-            // HttpContext in services by injecting it
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            // register an IImageGalleryHttpClient
             services.AddScoped<IImageGalleryHttpClient, ImageGalleryHttpClient>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
@@ -49,6 +62,8 @@ namespace ImageGallery.Web
             {
                 app.UseExceptionHandler("/Error");
             }
+
+            app.UseAuthentication();
 
             app.UseStaticFiles();
 

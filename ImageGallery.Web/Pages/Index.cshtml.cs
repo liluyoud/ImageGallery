@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using ImageGallery.Core.Models;
 using ImageGallery.Web.Services;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ImageGallery.Web.Pages
 {
+    [Authorize]
     public class IndexModel : PageModel
     {
         private readonly IImageGalleryHttpClient _imageGalleryHttpClient;
