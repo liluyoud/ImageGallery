@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.12
+VisualStudioVersion = 15.0.26730.15
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageGallery.Web", "ImageGallery.Web\ImageGallery.Web.csproj", "{F02407C9-C5A7-434B-994B-7F0CA21E7253}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageGallery.Web", "ImageGallery.Web\ImageGallery.Web.csproj", "{F02407C9-C5A7-434B-994B-7F0CA21E7253}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageGallery.API", "ImageGallery.API\ImageGallery.API.csproj", "{559B5ACE-1A9D-4C31-BEFA-951E4BF1F6EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageGallery.API", "ImageGallery.API\ImageGallery.API.csproj", "{559B5ACE-1A9D-4C31-BEFA-951E4BF1F6EF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageGallery.Core", "ImageGallery.Core\ImageGallery.Core.csproj", "{33AFC4A9-E8F4-4B2E-93A7-0186D3828006}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageGallery.Core", "ImageGallery.Core\ImageGallery.Core.csproj", "{33AFC4A9-E8F4-4B2E-93A7-0186D3828006}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
