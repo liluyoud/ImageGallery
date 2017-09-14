@@ -36,9 +36,9 @@ namespace ImageGallery.Web
                 options.ClientId = "imagegalleryclient";
                 options.ClientSecret = "secret";
                 options.RequireHttpsMetadata = true;
-                //options.SaveTokens = true;
-                //options.GetClaimsFromUserInfoEndpoint = true;
-                //options.ResponseType = "code id_token";
+                options.SaveTokens = true;
+                options.GetClaimsFromUserInfoEndpoint = true;
+                options.ResponseType = "code id_token";
             });
 
             services.AddMvc();
