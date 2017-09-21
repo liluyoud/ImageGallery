@@ -39,7 +39,11 @@ namespace ImageGallery.Web.Pages
                 var imagesAsString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
                 Images = JsonConvert.DeserializeObject<IList<Image>>(imagesAsString).ToList();
-            } else
+            } else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                RedirectToPage("AccessDenied");
+            }
+            else
             {
                 throw new Exception($"A problem happened while calling the API: {response.ReasonPhrase}");
             }

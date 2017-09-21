@@ -13,6 +13,7 @@ using System.Linq;
 namespace ImageGallery.API.Controllers
 {
     [Route("api/images")]
+    //[Authorize]
     public class ImagesController : Controller
     {
         private readonly IGalleryRepository _galleryRepository;
@@ -28,8 +29,12 @@ namespace ImageGallery.API.Controllers
         [HttpGet()]
         public IActionResult GetImages()
         {
-            // get from repo
-            var imagesFromRepo = _galleryRepository.GetImages();
+            string ownerId = null;
+            if (User.Identity.IsAuthenticated)
+            {
+                ownerId = User.Claims.FirstOrDefault(c => c.Type == "sub").Value;
+            }
+            var imagesFromRepo = _galleryRepository.GetImages(ownerId);
 
             // map to model
             var imagesToReturn = Mapper.Map<IEnumerable<Image>>(imagesFromRepo);
@@ -41,6 +46,16 @@ namespace ImageGallery.API.Controllers
         [HttpGet("{id}", Name = "GetImage")]
         public IActionResult GetImage(Guid id)
         {
+            string ownerId = null;
+            if (User.Identity.IsAuthenticated)
+            {
+                ownerId = User.Claims.FirstOrDefault(c => c.Type == "sub").Value;
+                if (!_galleryRepository.IsImageOwner(id, ownerId))
+                {
+                    return StatusCode(403);
+                }
+            }
+
             var imageFromRepo = _galleryRepository.GetImage(id);
 
             if (imageFromRepo == null)

@@ -12,6 +12,12 @@ using Microsoft.EntityFrameworkCore;
 using ImageGallery.API.Entities;
 using ImageGallery.API.Services;
 using Microsoft.AspNetCore.Http;
+using IdentityServer4;
+using IdentityServer4.AccessTokenValidation;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using ImageGallery.API.Authorization;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ImageGallery.API
 {
@@ -28,6 +34,35 @@ namespace ImageGallery.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
+            services.AddAuthorization(authorizationOptions =>
+            {
+                authorizationOptions.AddPolicy(
+                    "MustOwnImage",
+                    policyBuilder =>
+                    {
+                        policyBuilder.RequireAuthenticatedUser();
+                        policyBuilder.AddRequirements(new MustOwnImageRequirement());
+                    });
+            });
+
+            services.AddSingleton<IAuthorizationHandler, MustOwnImageHandler>();
+
+            //services.AddAuthentication()
+            services.AddAuthentication(options => {
+                    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+                    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                })
+                .AddIdentityServerAuthentication(options =>
+                {
+                    options.Authority = "https://localhost:44379/";
+                    options.RequireHttpsMetadata = true;
+                    options.ApiName = "imagegalleryapi";
+                    //options.SaveToken = true;
+                });
+
+            
 
             var connectionString = Configuration["connectionStrings:strConexao"];
             services.AddDbContext<GalleryContext>(o => o.UseSqlServer(connectionString));
@@ -87,6 +122,7 @@ namespace ImageGallery.API
 
             // seed the DB with data
             //galleryContext.EnsureSeedDataForContext();
+            app.UseAuthentication();
 
             app.UseMvc();
         }

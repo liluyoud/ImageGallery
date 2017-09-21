@@ -1,6 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Authorization
 @inject IAuthorizationService AuthorizationService
-
+    
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,7 +13,7 @@
         <link rel="stylesheet" href="~/css/site.css" />
     </environment>
     <environment names="Staging,Production">
-        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
+        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.6/css/bootstrap.min.css"
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
@@ -33,16 +33,15 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-page="Index">Home</a></li>
-                    
-                    @if ((await AuthorizationService.AuthorizeAsync(User, "CanOrderFrame")).Succeeded)
+                    <li><a asp-area="" asp-controller="Gallery" asp-action="Index">Home</a></li>                    
+                    <li><a asp-area="" asp-controller="Gallery" asp-action="AddImage">Add an image</a></li>   
+                    @if (User.IsInRole("PayingUser"))
                     {
-                        <li><a asp-area="" asp-page="AddImage">Add an image</a></li>
-                        <li><a asp-area="" asp-page="OrderFrame">Order a framed image</a></li>
+                    <li><a asp-area="" asp-controller="Gallery" asp-action="OrderFrame">Order a framed image</a></li>
                     }
                     @if (User.Identity.IsAuthenticated)
                     {
-                    <li><a asp-area="" asp-controller="Account" asp-action="Logout">Logout</a></li>
+                        <li><a asp-area="" asp-controller="Gallery" asp-action="Logout">Logout</a></li>
                     }
                 </ul>
             </div>
@@ -66,7 +65,7 @@
                 asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
                 asp-fallback-test="window.jQuery">
         </script>
-        <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/bootstrap.min.js"
+        <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.6/bootstrap.min.js"
                 asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
                 asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal">
         </script>

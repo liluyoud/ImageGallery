@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.12
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageGallery.Web", "ImageGallery.Web\ImageGallery.Web.csproj", "{F02407C9-C5A7-434B-994B-7F0CA21E7253}"
 EndProject
@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageGallery.API", "ImageGa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageGallery.Core", "ImageGallery.Core\ImageGallery.Core.csproj", "{33AFC4A9-E8F4-4B2E-93A7-0186D3828006}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageGallery.IDP", "ImageGallery.IDP\ImageGallery.IDP.csproj", "{9155684E-6284-40EE-AA6A-A318F536B4B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageGallery.IDP", "ImageGallery.IDP\ImageGallery.IDP.csproj", "{9155684E-6284-40EE-AA6A-A318F536B4B5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

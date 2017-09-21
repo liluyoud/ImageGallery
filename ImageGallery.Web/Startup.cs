@@ -12,6 +12,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Identity;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
 
 namespace ImageGallery.Web
 {
@@ -26,19 +29,65 @@ namespace ImageGallery.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthorization(authorizationOptions =>
+            {
+                authorizationOptions.AddPolicy(
+                    "CanOrderFrame",
+                    policyBuilder =>
+                    {
+                        policyBuilder.RequireAuthenticatedUser();
+                        policyBuilder.RequireClaim("country", "be");
+                        policyBuilder.RequireClaim("subscriptionlevel", "PayingUser");
+                    });
+            });
+
+            //services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme);
+
             services.AddAuthentication(options => {
                 options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             })
-            .AddCookie()
+            .AddCookie(options => {
+                options.AccessDeniedPath = "/AccessDenied";
+            })
             .AddOpenIdConnect(options => {
-                options.Authority = "https://localhost:44334/";
+                options.Authority = "https://localhost:44379/";
                 options.ClientId = "imagegalleryclient";
                 options.ClientSecret = "secret";
                 options.RequireHttpsMetadata = true;
                 options.SaveTokens = true;
                 options.GetClaimsFromUserInfoEndpoint = true;
                 options.ResponseType = "code id_token";
+                options.Scope.Add("address");
+                options.Scope.Add("roles");
+                options.Scope.Add("imagegalleryapi");
+                options.Scope.Add("subscriptionlevel");
+                options.Scope.Add("country");
+                options.Scope.Add("offline_access");
+                //options.Events = new OpenIdConnectEvents()
+                //{
+                //    OnTokenValidated = tokenValidatedContext =>
+                //    {
+                //        var identity = tokenValidatedContext.Principal.Identity as ClaimsIdentity;
+
+                //        var subjectClaim = identity.Claims.FirstOrDefault(z => z.Type == "sub");
+
+                //        var newClaimsIdentity = new ClaimsIdentity(tokenValidatedContext.Scheme.Name, "given_name", "role");
+
+                //        newClaimsIdentity.AddClaim(subjectClaim);
+
+                //        tokenValidatedContext.Principal..AddIdentity(newClaimsIdentity);
+
+                //        return Task.FromResult(0);
+                //    },
+
+                //    OnUserInformationReceived = userInformationReceivedContext =>
+                //    {
+                //        userInformationReceivedContext.User.Remove("address");
+                //        return Task.FromResult(0);
+                //    }
+                //};
             });
 
             services.AddMvc();
@@ -62,6 +111,8 @@ namespace ImageGallery.Web
             {
                 app.UseExceptionHandler("/Error");
             }
+
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
             app.UseAuthentication();
 

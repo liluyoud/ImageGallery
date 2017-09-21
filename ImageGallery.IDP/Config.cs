@@ -25,6 +25,10 @@ namespace ImageGallery.IDP
                     {
                         new Claim("given_name", "Frank"),
                         new Claim("family_name", "Underwood"),
+                        new Claim("address", "1, Main Road"),
+                        new Claim("role", "FreeUser"),
+                        new Claim("subscriptionlevel", "FreeUser"),
+                        new Claim("country", "nl")
                     }
                 },
                 new TestUser
@@ -37,6 +41,10 @@ namespace ImageGallery.IDP
                     {
                         new Claim("given_name", "Claire"),
                         new Claim("family_name", "Underwood"),
+                        new Claim("address", "2, Big Street"),
+                        new Claim("role", "PayingUser"),
+                        new Claim("subscriptionlevel", "PayingUser"),
+                        new Claim("country", "be")
                     }
                 }
             };
@@ -47,7 +55,22 @@ namespace ImageGallery.IDP
             return new List<IdentityResource>
             {
                 new IdentityResources.OpenId(),
-                new IdentityResources.Profile()
+                new IdentityResources.Profile(),
+                new IdentityResources.Address(),
+                new IdentityResource("roles", "Your role(s)", new List<string>() { "role"}),
+                new IdentityResource("country", "The country you're living in",
+                    new List<string> { "country" }),
+                new IdentityResource("subscriptionlevel", "Your subscription level",
+                    new List<string> { "subscriptionlevel" })
+            };
+        }
+
+        public static IEnumerable<ApiResource> GetApiResources()
+        {
+            return new List<ApiResource>
+            {
+                new ApiResource("imagegalleryapi", "Image Gallery API",
+                new List<string>() { "role" })
             };
         }
 
@@ -60,27 +83,39 @@ namespace ImageGallery.IDP
                     ClientName = "Image Gallery",
                     ClientId = "imagegalleryclient",
                     AllowedGrantTypes = GrantTypes.Hybrid,
+                    //IdentityTokenLifetime = 300, // 5 min
+                    //AuthorizationCodeLifetime = 300,
+                    AccessTokenLifetime = 120,
+                    UpdateAccessTokenClaimsOnRefresh = true,
+                    AllowOfflineAccess = true,
                     RedirectUris = new List<string>()
                     {
-                        "https://localhost:44382/signin-oidc"
+                        "https://localhost:44355/signin-oidc"
                     },
                     AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
-                        IdentityServerConstants.StandardScopes.Profile
+                        IdentityServerConstants.StandardScopes.Profile,
+                        IdentityServerConstants.StandardScopes.Address,
+                        "roles",
+                        "imagegalleryapi",
+                        "country",
+                        "subscriptionlevel"
                     },
                     ClientSecrets =
                     {
                         new Secret("secret".Sha256())
                     },
-                    
+
                     PostLogoutRedirectUris =
                     {
                         "https://localhost:44355/signout-callback-oidc"
-                    }
-                   // AlwaysIncludeUserClaimsInIdToken = true
+                    },
+                    AlwaysIncludeUserClaimsInIdToken = true
+                
                 }
              };
         }
     }
 }
+// 44382
